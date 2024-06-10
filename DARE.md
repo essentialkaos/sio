@@ -4,13 +4,13 @@
 
 ## 1. Introduction
 
-This document describes the Data At Rest Encryption (DARE) format for encrypting
+This document describes the Data At Rest Encryption (_DARE_) format for encrypting
 data in a tamper-resistant way. DARE is designed to securely encrypt data stored
-on (untrusted) storage providers.
+on (_untrusted_) storage providers.
 
 ## 2. Overview
 
-DARE specifies how to split an arbitrary data stream into small chunks (packages)
+DARE specifies how to split an arbitrary data stream into small chunks (_packages_)
 and concatenate them into a tamper-proof chain. Tamper-proof means that an attacker
 is not able to:
  - decrypt one or more packages.
@@ -27,8 +27,8 @@ DARE will use the following notations:
  - The concatenation of the byte sequences **a** and **b** is **a || b**.
  - The function **len(seq)** returns the length of a byte sequence **seq** in bytes.
  - The index access **seq[i]** accesses one byte at index **i** of the sequence **seq**.
- - The range access **seq[i : j]** accesses a range of bytes starting at **i** (inclusive)
-   and ending at **j** (exclusive).
+ - The range access **seq[i : j]** accesses a range of bytes starting at **i** (_inclusive_)
+   and ending at **j** (_exclusive_).
  - The compare functions **a == b => f** and **a != b => f** succeed when **a** 
    is equal to **b** and **a** is not equal to **b** respectively and execute the command **f**.
  - The function **CTC(a, b)** returns **1** only if **a** and **b** are equal, 0 otherwise.
@@ -46,7 +46,7 @@ order. An AEAD cipher will be either AES-256_GCM or CHACHA20_POLY1305.
 
 ## 2.2 Keys
 
-Both ciphers - AES-256_GCM and CHACHA20_POLY1305 - require a 32 byte key. The key
+Both ciphers - `AES-256_GCM` and `CHACHA20_POLY1305` - require a 32 byte key. The key
 **must** be unique for one encrypted data stream. Reusing a key **compromises**
 some security properties provided by DARE. See Appendix A for recommendations
 about generating keys and preventing key reuse. 
@@ -54,14 +54,14 @@ about generating keys and preventing key reuse.
 ## 2.3 Errors
 
 DARE defines the following errors:
- - **err_unsupported_version**: Indicates that the header version is not supported.
- - **err_unsupported_cipher**: Indicates that the cipher suite is not supported.
- - **err_missing_header**: Indicates that the payload header is missing or incomplete.
- - **err_payload_too_short**: Indicates that the actual payload size is smaller than the
+ - `err_unsupported_version`: Indicates that the header version is not supported.
+ - `err_unsupported_cipher`: Indicates that the cipher suite is not supported.
+ - `err_missing_header`: Indicates that the payload header is missing or incomplete.
+ - `err_payload_too_short`: Indicates that the actual payload size is smaller than the
   payload size field of the header.
- - **err_package_out_of_order**: Indicates that the sequence number of the package does
+ - `err_package_out_of_order`: Indicates that the sequence number of the package does
    not match the expected sequence number.
- - **err_tag_mismatch**: Indicates that the tag of the package does not match the tag
+ - `err_tag_mismatch`: Indicates that the tag of the package does not match the tag
    computed while decrypting the package.
 
 ## 3. Package Format
@@ -80,13 +80,13 @@ Version | Cipher suite | Payload size     | Sequence number  | nonce
 --------|--------------|------------------|------------------|---------
 1 byte  | 1 byte       | 2 bytes / uint16 | 4 bytes / uint32 | 8 bytes
 
-The first byte specifies the version of the format and is equal to 0x10 for DARE 
+The first byte specifies the version of the format and is equal to `0x10` for DARE 
 version 1.0. The second byte specifies the cipher used to encrypt the package.
 
-Cipher            | Value
-------------------|-------
-AES-256_GCM       | 0x00
-CHACHA20_POLY1305 | 0x01
+Cipher              | Value
+--------------------|-------
+`AES-256_GCM`       | `0x00`
+`CHACHA20_POLY1305` | `0x01`
 
 The payload size is an uint16 number. The real payload size is defined as the payload
 size field as uint32 + 1. This ensures that the payload can be exactly 64 KB long and
@@ -99,7 +99,7 @@ sequence number of the n-th package is n-1. This means a sequence of packages ca
 of 2 ^ 32 packages and each package can hold up to 64 KB data. The maximum size
 of a data stream is limited by `64 KB * 2^32 = 256 TB`. This should be sufficient
 for current use cases. However, if necessary, the maximum size of a data stream can increased
-in the future by slightly tweaking the header (with a new version).
+in the future by slightly tweaking the header (_with a new version_).
 
 The nonce **should** be a random value for each data stream and **should** be kept constant
 for all its packages. Even if a key is accidentally used
@@ -186,10 +186,10 @@ If two data streams are encrypted with the same key the attacker will not be abl
 package of those streams without breaking the cipher as long as the nonces are different. To be
 more precise the attacker may only be able to decrypt a package if:
  - There is another package encrypted with the same key.
- - The sequence number and nonce of those two packages (encrypted with the same key) are equal.
+ - The sequence number and nonce of those two packages (_encrypted with the same key_) are equal.
 
-As long as the nonce of a sequence of packages differs from every other nonce (and the nonce is
-repeated within one sequence - which is **recommended**) the attacker will not be able to decrypt
+As long as the nonce of a sequence of packages differs from every other nonce (_and the nonce is
+repeated within one sequence - which is **recommended**_) the attacker will not be able to decrypt
 any package. It is not required that the nonce is indistinguishable from a truly random bit sequence.
 It is sufficient when the nonces differ from each other in at least one bit.
 
@@ -199,12 +199,12 @@ It is sufficient when the nonces differ from each other in at least one bit.
 
 DARE needs a unique encryption key per data stream. The best approach to ensure that the keys
 are unique is to derive every encryption key from a master key. Therefore a key derivation function
-(KDF) - e.g. HKDF, BLAKE2X or HChaCha20 -  can be used. The master key itself may be derived from
+(_KDF_) - e.g. HKDF, BLAKE2X or HChaCha20 -  can be used. The master key itself may be derived from
 a password using functions like Argon2 or scrypt. Deriving those keys is the responsibility of the
 users of DARE.
 
-It is **not recommended** to derive encryption keys from a master key and an identifier (like the
-file path). If a different data stream is stored under the same identifier - e.g. overwriting the 
+It is **not recommended** to derive encryption keys from a master key and an identifier (_like the
+file path_). If a different data stream is stored under the same identifier - e.g. overwriting the 
 data - the derived key would be the same for both streams.
 
 Instead encryption keys should be derived from a master key and a random value. It is not required
@@ -218,6 +218,6 @@ must be unique all the time.
 
 DARE does not require random values which are indistinguishable from a truly random bit sequence.
 However, a random value **must** never be repeated. Therefore it is **recommended** to use a
-cryptographically secure pseudorandom number generator (CSPRNG) to generate random values. Many
+cryptographically secure pseudorandom number generator (_CSPRNG_) to generate random values. Many
 operating systems and cryptographic libraries already provide appropriate PRNG implementations.
 These implementations should always be preferred over crafting a new one.

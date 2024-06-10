@@ -114,7 +114,7 @@ func TestOpenV10(t *testing.T) {
 		}
 
 		if err = ad.Open(plaintext, ciphertext); err == nil {
-			t.Errorf("Test %d (invalid): successfully opened modifed package", i)
+			t.Errorf("Test %d (invalid): successfully opened modified package", i)
 		}
 	}
 }
@@ -203,7 +203,7 @@ func TestOpenV20(t *testing.T) {
 		}
 
 		if err = ad.Open(plaintext, ciphertext); err == nil {
-			t.Errorf("Test %d (invalid): successfully opened modifed package", i)
+			t.Errorf("Test %d (invalid): successfully opened modified package", i)
 		}
 	}
 }
