@@ -1,6 +1,6 @@
 module github.com/essentialkaos/sio
 
-go 1.19
+go 1.22.7
 
 require (
 	golang.org/x/crypto v0.24.0
