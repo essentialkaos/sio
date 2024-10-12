@@ -41,7 +41,7 @@ jobs:
           go-version: ${{ matrix.go }}
 
       - name: Run tests
-        run: make test
+        run: make test CGO=1
 
   Typos:
     name: Typos
