@@ -1,4 +1,4 @@
-## Secure IO [![Godoc Reference](https://gh.kaos.st/godoc.svg)](https://kaos.sh/g/sio) [![CI](https://kaos.sh/w/sio/ci.svg)](https://kaos.sh/w/sio/ci) [![CodeQL](https://kaos.sh/w/sio/codeql.svg)](https://kaos.sh/w/sio/codeql) [![License](.github/images/license.svg)](LICENSE)
+## Secure IO [![Godoc Reference](.github/images/godoc.svg)](https://kaos.sh/g/sio) [![CI](https://kaos.sh/w/sio/ci.svg)](https://kaos.sh/w/sio/ci) [![CodeQL](https://kaos.sh/w/sio/codeql.svg)](https://kaos.sh/w/sio/codeql) [![License](.github/images/license.svg)](LICENSE)
 
 Go implementation of the Data At Rest Encryption (_DARE_) format.
 
